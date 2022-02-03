@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Test Suite">
+    <test verbose="2" name="a2.efimenko_finalTest">
+        <classes>
+            <class name="com.steps.tests.TestUiAndApi">
+                <methods>
+                    <include name="testSite"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
