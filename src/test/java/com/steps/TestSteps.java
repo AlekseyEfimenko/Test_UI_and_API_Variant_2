@@ -3,6 +3,7 @@ package com.steps;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertNotEquals;
+import static org.testng.Assert.assertFalse;
 import aquality.selenium.browser.AqualityServices;
 import aquality.selenium.browser.Browser;
 import aquality.selenium.core.logging.Logger;
@@ -10,6 +11,7 @@ import com.data.Keys;
 import com.data.Values;
 import com.pages.NexagePage;
 import com.pages.ProjectPage;
+import com.pages.forms.ProjectForm;
 import com.pojo.Test;
 import com.utils.ApiUtils;
 import com.utils.Config;
@@ -26,6 +28,7 @@ public class TestSteps {
     private final ProjectPage projectPage = new ProjectPage();
     private final NexagePage nexagePage = new NexagePage();
     private final Config config = Config.getInstance();
+    private ProjectForm projectForm;
     private List<Test> testFromApi = new ArrayList<>();
 
     public String getToken(String target) {
@@ -75,6 +78,43 @@ public class TestSteps {
     public void assertTestsFromApiEqualsToTestsFromSite() {
         logger.info("Checking if the list of tests from the first page of site equals to the list of tests from Api");
         assertEquals(nexagePage.getTestNames(), getListOfTestNamesFromApi());
+    }
+
+    public void navigateBack() {
+        browser.goBack();
+    }
+
+    public void addProject(String project) {
+        logger.info("Adding new project");
+        projectPage.clickAddButton();
+        projectForm = new ProjectForm();
+        projectForm.enterText(project);
+        projectForm.clickSaveButton();
+    }
+
+    public void assertProjectIsCreated() {
+        logger.info("Checking if the project created successful");
+        assertFalse(projectForm.elementIsDisplayed());
+    }
+
+    public void closeProjectForm() {
+        logger.info("Closing Add-project form");
+        browser.executeScript("document.querySelector('.modal').style.display='none'");
+        browser.executeScript("document.querySelector('.modal-backdrop').style.display='none'");
+    }
+
+    public void assertProjectAddFormIsClosed() {
+        logger.info("Checking if the form for adding new project is disappeared");
+        assertFalse(projectForm.state().isDisplayed());
+    }
+
+    public void refreshPage() {
+        browser.refresh();
+    }
+
+    public void assertNewProjectIsInList(String name) {
+        logger.info("Checking if new project is displayed in the list of projects");
+        assertTrue(projectPage.findProject(name) > 0);
     }
 
     private List<String> getListOfTestNamesFromApi() {

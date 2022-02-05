@@ -12,6 +12,7 @@ public class TestUiAndApi extends BaseTest{
     private static final String TOKEN_TARGET = "token/get";
     private static final String TESTS = "test/get/json";
     private static final String START_PAGE = Config.getInstance().getStartURL();
+    private static final String PROJECT_NAME = Config.getInstance().getProperties("project");
 
     @Test
     public void testSite() {
@@ -26,5 +27,13 @@ public class TestUiAndApi extends BaseTest{
         steps.assertTestIsSortedDesc();
         steps.getTests(TESTS, ScenarioContext.getContext(Context.PROJET_ID).toString());
         steps.assertTestsFromApiEqualsToTestsFromSite();
+
+        steps.navigateBack();
+        steps.addProject(PROJECT_NAME);
+        steps.assertProjectIsCreated();
+        steps.closeProjectForm();
+        steps.assertProjectAddFormIsClosed();
+        steps.refreshPage();
+        steps.assertNewProjectIsInList(PROJECT_NAME);
     }
 }
