@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -28,6 +31,35 @@ public class Config {
     public String getProperties(String key) {
         loadFile("config.properties");
         return properties.getProperty(key);
+    }
+
+    /**
+     * Check if list is sorted
+     * @param listOfStrings The list to check in
+     * @param <T> The type of objects in the list
+     * @return true - if list is sorted. Otherwise false
+     */
+    public <T extends Comparable<T>> boolean isSorted(List<T> listOfStrings) {
+        if (listOfStrings.isEmpty() || listOfStrings.size() == 1) {
+            return true;
+        }
+
+        Iterator<T> iter = listOfStrings.iterator();
+        T current;
+        T previous = iter.next();
+
+        while (iter.hasNext()) {
+            current = iter.next();
+            if (previous.compareTo(current) > 0) {
+                return false;
+            }
+            previous = current;
+        }
+        return true;
+    }
+
+    public <T> void reverseList(List<T> list) {
+        Collections.reverse(list);
     }
 
     private void loadFile(String src) {

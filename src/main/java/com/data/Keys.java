@@ -1,7 +1,8 @@
 package com.data;
 
 public enum Keys {
-    VARIANT("variant");
+    VARIANT("variant"),
+    PROJECTID("projectId");
     private final String key;
 
     Keys(String key) {
