@@ -100,7 +100,7 @@ public class TestSteps {
 
     public void assertProjectIsCreated() {
         logger.info("Checking if the project created successful");
-        assertFalse(projectForm.elementIsDisplayed());
+        assertTrue(projectForm.elementIsDisplayed());
     }
 
     public void closeProjectForm() {

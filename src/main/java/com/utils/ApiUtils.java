@@ -2,19 +2,22 @@ package com.utils;
 
 import aquality.selenium.core.logging.Logger;
 import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.Filter;
 import io.restassured.filter.FilterContext;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.FilterableRequestSpecification;
 import io.restassured.specification.FilterableResponseSpecification;
+import io.restassured.specification.RequestSpecification;
 import java.util.List;
 import java.util.Map;
 
 public class ApiUtils {
     private static final String BASE_PATH = Config.getInstance().getProperties("ApiUrl");
-    private static final String CONTENT_TYPE = "Content-Type";
     private static ApiUtils instance;
+    private final RequestSpecification specification = new RequestSpecBuilder()
+            .setBaseUri(BASE_PATH)
+            .build();
     private Response response;
 
     private ApiUtils() {}
@@ -40,9 +43,9 @@ public class ApiUtils {
     public void postRequest(String target, String key, String value) {
         response = RestAssured
                 .given()
-                .header(CONTENT_TYPE, ContentType.JSON)
+                .spec(specification)
                 .queryParam(key, value)
-                .post(String.format("%1$s%2$s", BASE_PATH, target));
+                .post(target);
     }
 
     /**
@@ -53,8 +56,9 @@ public class ApiUtils {
     public void postRequest(String target, Map<String, String> param) {
         response = RestAssured
                 .given()
+                .spec(specification)
                 .params(param)
-                .post(String.format("%1$s%2$s", BASE_PATH, target));
+                .post(target);
     }
 
     /**
