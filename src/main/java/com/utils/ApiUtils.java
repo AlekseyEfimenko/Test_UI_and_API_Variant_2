@@ -1,10 +1,6 @@
 package com.utils;
 
 import aquality.selenium.core.logging.Logger;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.pojo.Test;
 import io.restassured.RestAssured;
 import io.restassured.filter.Filter;
 import io.restassured.filter.FilterContext;
@@ -12,8 +8,8 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.FilterableRequestSpecification;
 import io.restassured.specification.FilterableResponseSpecification;
-import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 public class ApiUtils {
     private static final String BASE_PATH = Config.getInstance().getProperties("ApiUrl");
@@ -24,6 +20,10 @@ public class ApiUtils {
 
     private ApiUtils() {}
 
+    /**
+     * Create an instance to get access to class methods
+     * @return Class instance
+     */
     public static ApiUtils getInstance() {
         if (instance == null) {
             instance = new ApiUtils();
@@ -32,11 +32,29 @@ public class ApiUtils {
         return instance;
     }
 
+    /**
+     * Send POST request to API
+     * @param target URL of request
+     * @param key The key of parameter
+     * @param value The value of parameter to send
+     */
     public void postRequest(String target, String key, String value) {
         response = RestAssured
                 .given()
                 .header(CONTENT_TYPE, ContentType.JSON)
                 .queryParam(key, value)
+                .post(String.format("%1$s%2$s", BASE_PATH, target));
+    }
+
+    /**
+     * Send POST request to API
+     * @param target URL of request
+     * @param param Parameters given to request in format key-value through Map<String, String>
+     */
+    public void postNewTest(String target, Map<String, String> param) {
+        response = RestAssured
+                .given()
+                .params(param)
                 .post(String.format("%1$s%2$s", BASE_PATH, target));
     }
 
@@ -79,13 +97,9 @@ public class ApiUtils {
         return response.jsonPath().getList(target);
     }
 
-    public List<Test> getListOfTests() {
-            Type collectionType = new TypeToken<List<Test>>() {}.getType();
-            GsonBuilder gsonBuilder = new GsonBuilder();
-            Gson gson = gsonBuilder.create();
-            return gson.fromJson(getBody(), collectionType);
-    }
-
+    /**
+     * Filter request command and add logging
+     */
     static class MyRequestFilter implements Filter {
 
         @Override

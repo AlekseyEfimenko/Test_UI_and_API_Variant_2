@@ -12,8 +12,8 @@ public class ScenarioContext {
         scenario.put(key.toString(), value);
     }
 
-    public static Object getContext(Context key) {
-        return scenario.get(key.toString());
+    public static String getContext(Context key) {
+        return scenario.get(key.toString()).toString();
     }
 
     public static boolean isContains(Context key) {

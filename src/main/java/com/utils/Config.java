@@ -1,6 +1,8 @@
 package com.utils;
 
 import aquality.selenium.core.logging.Logger;
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,10 +24,6 @@ public class Config {
             instance = new Config();
         }
         return instance;
-    }
-
-    public String getStartURL() {
-        return getProperties("WebUrl");
     }
 
     public String getProperties(String key) {
@@ -60,6 +58,10 @@ public class Config {
 
     public <T> void reverseList(List<T> list) {
         Collections.reverse(list);
+    }
+
+    public String getRandomString() {
+        return RandomStringUtils.randomAlphabetic(20);
     }
 
     private void loadFile(String src) {

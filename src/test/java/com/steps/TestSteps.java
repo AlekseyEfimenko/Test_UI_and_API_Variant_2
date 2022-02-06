@@ -15,13 +15,13 @@ import com.pages.forms.ProjectForm;
 import com.pojo.Test;
 import com.utils.ApiUtils;
 import com.utils.Config;
+import com.utils.DataUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 public class TestSteps {
-    private static final String LOGIN = Config.getInstance().getProperties("login");
-    private static final String PASSWORD = Config.getInstance().getProperties("password");
     private final Browser browser = AqualityServices.getBrowser();
     private final ApiUtils apiUtils = ApiUtils.getInstance();
     private final Logger logger = Logger.getInstance();
@@ -43,8 +43,8 @@ public class TestSteps {
         assertBodyIsNotEmpty(body);
     }
 
-    public void navigateToSite(String url) {
-        browser.goTo(String.format("http://%1$s:%2$s@%3$s", LOGIN, PASSWORD, url));
+    public void navigateToSite(String url, String login, String password) {
+        browser.goTo(String.format("http://%1$s:%2$s@%3$s", login, password, url));
         browser.waitForPageToLoad();
     }
 
@@ -71,8 +71,8 @@ public class TestSteps {
 
     public void getTests(String target, String value) {
         logger.info("Getting list of tests from Api");
-        apiUtils.postRequest(target, Keys.PROJECTID.getKey(), value);
-        testFromApi = apiUtils.getListOfTests();
+        apiUtils.postRequest(target, Keys.PROJECT_ID.getKey(), value);
+        testFromApi = DataUtils.getInstance().getListOfTests();
     }
 
     public void assertTestsFromApiEqualsToTestsFromSite() {
@@ -115,6 +115,16 @@ public class TestSteps {
     public void assertNewProjectIsInList(String name) {
         logger.info("Checking if new project is displayed in the list of projects");
         assertTrue(projectPage.findProject(name) > 0);
+    }
+
+    public void navigateToCreatedProject() {
+        logger.info("Navigate to new project");
+        projectPage.clickNewProject();
+    }
+
+    public String addTest(String target, Map<String, String> parameters) {
+        apiUtils.postNewTest(target, parameters);
+        return apiUtils.getBody();
     }
 
     private List<String> getListOfTestNamesFromApi() {
