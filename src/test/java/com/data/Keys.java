@@ -8,7 +8,11 @@ public enum Keys {
     TEST_NAME("testName"),
     METHOD_NAME("methodName"),
     ENVIRONMENT("env"),
-    BROWSER("browser");
+    BROWSER("browser"),
+    TEST_ID("testId"),
+    CONTENT("content"),
+    IS_EXCEPTION("isException"),
+    CONTENT_TYPE("contentType");
 
     private final String key;
 

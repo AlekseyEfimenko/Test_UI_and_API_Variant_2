@@ -15,12 +15,13 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class BaseTest {
+    private static final int SESSION_ID_LENGTH = 20;
     private Browser browser;
     protected TestSteps steps = new TestSteps();
 
     @BeforeSuite
     public void setUpDriver() throws UnknownHostException {
-        setContext(Context.SESSION_ID, Config.getInstance().getRandomString());
+        setContext(Context.SESSION_ID, Config.getInstance().getRandomString(SESSION_ID_LENGTH));
         setContext(Context.HOST, InetAddress.getLocalHost().getHostName());
         browser = AqualityServices.getBrowser();
         browser.maximize();

@@ -15,7 +15,6 @@ public class ApiUtils {
     private static final String BASE_PATH = Config.getInstance().getProperties("ApiUrl");
     private static final String CONTENT_TYPE = "Content-Type";
     private static ApiUtils instance;
-    private final Logger logger = Logger.getInstance();
     private Response response;
 
     private ApiUtils() {}
@@ -51,7 +50,7 @@ public class ApiUtils {
      * @param target URL of request
      * @param param Parameters given to request in format key-value through Map<String, String>
      */
-    public void postNewTest(String target, Map<String, String> param) {
+    public void postRequest(String target, Map<String, String> param) {
         response = RestAssured
                 .given()
                 .params(param)
@@ -101,18 +100,19 @@ public class ApiUtils {
      * Filter request command and add logging
      */
     static class MyRequestFilter implements Filter {
+        private final Logger logger = Logger.getInstance();
 
         @Override
         public Response filter(FilterableRequestSpecification requestSpec, FilterableResponseSpecification responseSpec, FilterContext ctx) {
             Response response = ctx.next(requestSpec, responseSpec);
             if (requestSpec.getMethod().equals("GET")) {
-                Logger.getInstance().info(String.format("Getting request from %1$s", requestSpec.getURI()));
+                logger.info(String.format("Getting request from %1$s", requestSpec.getURI()));
             } else if (requestSpec.getMethod().equals("POST")) {
-                Logger.getInstance().info(String.format("Post request to %1$s", requestSpec.getURI()));
+                logger.info(String.format("Post request to %1$s", requestSpec.getURI()));
             }
             Logger.getInstance().info(String.format("Status code of request is: %1$s", response.statusCode()));
             if (response.statusCode() >= 400) {
-                Logger.getInstance().error(String.format("%1$s => %2$s", requestSpec.getURI(), response.getStatusLine()));
+                logger.error(String.format("%1$s => %2$s", requestSpec.getURI(), response.getStatusLine()));
             }
             return response;
         }

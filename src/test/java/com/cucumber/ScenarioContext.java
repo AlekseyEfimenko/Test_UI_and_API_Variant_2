@@ -1,5 +1,6 @@
 package com.cucumber;
 
+import aquality.selenium.core.logging.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,10 +14,12 @@ public class ScenarioContext {
     }
 
     public static String getContext(Context key) {
-        return scenario.get(key.toString()).toString();
-    }
-
-    public static boolean isContains(Context key) {
-        return scenario.containsKey(key.toString());
+        String context = null;
+        try {
+            context = scenario.get(key.toString()).toString();
+        } catch(NullPointerException ex) {
+            Logger.getInstance().error(ex.getMessage());
+        }
+        return context;
     }
 }

@@ -7,15 +7,20 @@ import static org.testng.Assert.assertFalse;
 import aquality.selenium.browser.AqualityServices;
 import aquality.selenium.browser.Browser;
 import aquality.selenium.core.logging.Logger;
+import com.cucumber.Context;
+import com.cucumber.ScenarioContext;
 import com.data.Keys;
 import com.data.Values;
 import com.pages.NexagePage;
 import com.pages.ProjectPage;
+import com.pages.forms.CreatedProjectPage;
 import com.pages.forms.ProjectForm;
 import com.pojo.Test;
 import com.utils.ApiUtils;
 import com.utils.Config;
 import com.utils.DataUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -27,6 +32,7 @@ public class TestSteps {
     private final Logger logger = Logger.getInstance();
     private final ProjectPage projectPage = new ProjectPage();
     private final NexagePage nexagePage = new NexagePage();
+    private final CreatedProjectPage createdProject = new CreatedProjectPage();
     private final Config config = Config.getInstance();
     private ProjectForm projectForm;
     private List<Test> testFromApi = new ArrayList<>();
@@ -123,8 +129,25 @@ public class TestSteps {
     }
 
     public String addTest(String target, Map<String, String> parameters) {
-        apiUtils.postNewTest(target, parameters);
+        logger.info("Add new test to project ang get id of new test");
+        apiUtils.postRequest(target, parameters);
         return apiUtils.getBody();
+    }
+
+    public void assertAddedTestIsPresent(String testId) {
+        logger.info("Checking if new test is present on the page");
+        assertEquals(createdProject.elementIsPresent(testId), ScenarioContext.getContext(Context.TEST_NAME));
+    }
+
+    public void addLogs(String target, Map<String, String> parameters) {
+        logger.info("Add logs of new test");
+        apiUtils.postRequest(target, parameters);
+    }
+
+    public void addScreenshot(String target, Map<String, String> parameters) {
+        logger.info("Add screenshot of current page");
+        getScreenshot();
+        apiUtils.postRequest(target, parameters);
     }
 
     private List<String> getListOfTestNamesFromApi() {
@@ -159,5 +182,9 @@ public class TestSteps {
     private void assertStatusCodeIsCorrect(int statusCode) {
         logger.info(String.format("Checking if status code of request equals to %1$s", statusCode));
         assertEquals(apiUtils.getStatusCode(), statusCode);
+    }
+
+    private void getScreenshot() {
+        ScenarioContext.setContext(Context.SCREENSHOT, ((TakesScreenshot) browser.getDriver()).getScreenshotAs(OutputType.BASE64));
     }
 }

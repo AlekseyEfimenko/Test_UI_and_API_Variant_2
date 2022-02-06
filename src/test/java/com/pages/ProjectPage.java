@@ -7,7 +7,6 @@ import aquality.selenium.elements.interfaces.ILabel;
 import aquality.selenium.elements.interfaces.ILink;
 import aquality.selenium.forms.Form;
 import org.openqa.selenium.By;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

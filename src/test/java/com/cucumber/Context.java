@@ -2,11 +2,14 @@ package com.cucumber;
 
 public enum Context {
     TOKEN,
-    PROJET_ID,
+    PROJECT_ID,
     TEST_NAME,
     METHOD_NAME,
     SESSION_ID,
     HOST,
     BROWSER,
-    TEST_ID;
+    TEST_ID,
+    IS_EXCEPTION,
+    LOGS,
+    SCREENSHOT
 }
