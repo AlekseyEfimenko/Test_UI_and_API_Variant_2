@@ -4,7 +4,7 @@ import static com.cucumber.ScenarioContext.getContext;
 import aquality.selenium.core.logging.Logger;
 import com.cucumber.Context;
 import com.data.Keys;
-import com.data.Values;
+import com.data.ContentType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -66,7 +66,7 @@ public class DataUtils {
     public Map<String, String> getParametersForTestAdd() {
         mapParam.clear();
         mapParam.put(Keys.SESSION_ID.getKey(), getContext(Context.SESSION_ID));
-        mapParam.put(Keys.PROJECT_NAME.getKey(), Config.getInstance().getProperties("project"));
+        mapParam.put(Keys.PROJECT_NAME.getKey(), getContext(Context.PROJECT_NAME));
         mapParam.put(Keys.TEST_NAME.getKey(), getContext(Context.TEST_NAME));
         mapParam.put(Keys.METHOD_NAME.getKey(), getContext(Context.METHOD_NAME));
         mapParam.put(Keys.ENVIRONMENT.getKey(), getContext(Context.HOST));
@@ -94,7 +94,7 @@ public class DataUtils {
         mapParam.clear();
         mapParam.put(Keys.TEST_ID.getKey(), getContext(Context.TEST_ID));
         mapParam.put(Keys.CONTENT.getKey(), getContext(Context.SCREENSHOT));
-        mapParam.put(Keys.CONTENT_TYPE.getKey(), Values.V_CONTENT_TYPE.getValue());
+        mapParam.put(Keys.CONTENT_TYPE.getKey(), ContentType.CONTENT_TYPE.getValue());
         return mapParam;
     }
 

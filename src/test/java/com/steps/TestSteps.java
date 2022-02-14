@@ -4,30 +4,26 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertFalse;
-import aquality.selenium.browser.AqualityServices;
-import aquality.selenium.browser.Browser;
 import aquality.selenium.core.logging.Logger;
 import com.cucumber.Context;
 import com.cucumber.ScenarioContext;
 import com.data.Keys;
-import com.data.Values;
 import com.pages.NexagePage;
 import com.pages.ProjectPage;
 import com.pages.forms.CreatedProjectPage;
 import com.pages.forms.ProjectForm;
 import com.pojo.Test;
 import com.utils.ApiUtils;
+import com.utils.BrowserManager;
 import com.utils.Config;
 import com.utils.DataUtils;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 public class TestSteps {
-    private final Browser browser = AqualityServices.getBrowser();
+    private final BrowserManager browserManager = new BrowserManager();
     private final ApiUtils apiUtils = ApiUtils.getInstance();
     private final Logger logger = Logger.getInstance();
     private final ProjectPage projectPage = new ProjectPage();
@@ -37,9 +33,9 @@ public class TestSteps {
     private ProjectForm projectForm;
     private List<Test> testFromApi = new ArrayList<>();
 
-    public String getToken(String target) {
+    public String getToken(String target, String variant) {
         logger.info("Getting token from api-request");
-        apiUtils.postRequest(target, Keys.VARIANT.getKey(), Values.V_VARIANT.getValue());
+        apiUtils.postRequest(target, Keys.VARIANT.getKey(), variant);
         return apiUtils.getBody();
     }
 
@@ -50,8 +46,8 @@ public class TestSteps {
     }
 
     public void navigateToSite(String url, String login, String password) {
-        browser.goTo(String.format("http://%1$s:%2$s@%3$s", login, password, url));
-        browser.waitForPageToLoad();
+        browserManager.navigateTo(String.format("http://%1$s:%2$s@%3$s", login, password, url));
+        browserManager.waitForPageToLoad();
     }
 
     public void assertProjectPageIsOpen() {
@@ -87,7 +83,7 @@ public class TestSteps {
     }
 
     public void navigateBack() {
-        browser.goBack();
+        browserManager.navigateBack();
     }
 
     public void addProject(String project) {
@@ -105,8 +101,8 @@ public class TestSteps {
 
     public void closeProjectForm() {
         logger.info("Closing Add-project form");
-        browser.executeScript("document.querySelector('.modal').style.display='none'");
-        browser.executeScript("document.querySelector('.modal-backdrop').style.display='none'");
+        browserManager.executeScript("document.querySelector('.modal').style.display='none'");
+        browserManager.executeScript("document.querySelector('.modal-backdrop').style.display='none'");
     }
 
     public void assertProjectAddFormIsClosed() {
@@ -115,7 +111,7 @@ public class TestSteps {
     }
 
     public void refreshPage() {
-        browser.refresh();
+        browserManager.refreshPage();
     }
 
     public void assertNewProjectIsInList(String name) {
@@ -185,6 +181,6 @@ public class TestSteps {
     }
 
     private void getScreenshot() {
-        ScenarioContext.setContext(Context.SCREENSHOT, ((TakesScreenshot) browser.getDriver()).getScreenshotAs(OutputType.BASE64));
+        ScenarioContext.setContext(Context.SCREENSHOT, browserManager.getScreenshotAsBase64());
     }
 }

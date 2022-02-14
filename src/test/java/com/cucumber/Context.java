@@ -11,5 +11,6 @@ public enum Context {
     TEST_ID,
     IS_EXCEPTION,
     LOGS,
-    SCREENSHOT
+    SCREENSHOT,
+    PROJECT_NAME
 }

@@ -5,6 +5,8 @@ import static com.cucumber.ScenarioContext.getContext;
 import static com.utils.Config.getInstance;
 import com.cucumber.Context;
 import com.cucumber.ScenarioContext;
+import com.data.EndPoints;
+import com.data.StatusCode;
 import com.utils.DataUtils;
 import com.utils.TestResultListener;
 import org.testng.annotations.AfterTest;
@@ -13,15 +15,10 @@ import org.testng.annotations.Test;
 
 @Listeners(TestResultListener.class)
 public class TestUiAndApi extends BaseTest{
-    private static final int SUCCESS_STATUS_CODE = 200;
+    private static final String VARIANT = getInstance().getProperties("variant");
     private static final String EMPTY_BODY = "{}";
-    private static final String TOKEN_TARGET = "token/get";
-    private static final String GET_TESTS = "test/get/json";
-    private static final String ADD_TEST = "test/put";
-    private static final String ADD_LOGS = "test/put/log";
-    private static final String ADD_CONTENT = "test/put/attachment";
     private static final String START_PAGE = DataUtils.getInstance().getStartURL();
-    private static final String PROJECT_NAME = getInstance().getProperties("project");
+    private static final String PROJECT_NAME = getInstance().getRandomString(10);
     private static final String LOGIN = getInstance().getProperties("login");
     private static final String PASSWORD = getInstance().getProperties("password");
     private final DataUtils dataUtils = DataUtils.getInstance();
@@ -29,8 +26,8 @@ public class TestUiAndApi extends BaseTest{
     @Test
     public void testSite() {
         setContext(Context.TEST_NAME, this.getClass().getName());
-        setContext(Context.TOKEN, steps.getToken(TOKEN_TARGET));
-        steps.assertTokenIsGenerated(EMPTY_BODY, SUCCESS_STATUS_CODE);
+        setContext(Context.TOKEN, steps.getToken(EndPoints.TOKEN_TARGET.getValue(), VARIANT));
+        steps.assertTokenIsGenerated(EMPTY_BODY, StatusCode.SUCCESS.getValue());
 
         steps.navigateToSite(START_PAGE, LOGIN, PASSWORD);
         steps.assertProjectPageIsOpen();
@@ -38,10 +35,11 @@ public class TestUiAndApi extends BaseTest{
 
         steps.goToNexagePage();
         steps.assertTestIsSortedDesc();
-        steps.getTests(GET_TESTS, ScenarioContext.getContext(Context.PROJECT_ID));
+        steps.getTests(EndPoints.GET_TESTS.getValue(), ScenarioContext.getContext(Context.PROJECT_ID));
         steps.assertTestsFromApiEqualsToTestsFromSite();
 
         steps.navigateBack();
+        setContext(Context.PROJECT_NAME, PROJECT_NAME);
         steps.addProject(PROJECT_NAME);
         steps.assertProjectIsCreated();
         steps.closeProjectForm();
@@ -50,13 +48,13 @@ public class TestUiAndApi extends BaseTest{
         steps.assertNewProjectIsInList(PROJECT_NAME);
 
         steps.navigateToCreatedProject();
-        setContext(Context.TEST_ID, steps.addTest(ADD_TEST, dataUtils.getParametersForTestAdd()));
+        setContext(Context.TEST_ID, steps.addTest(EndPoints.ADD_TEST.getValue(), dataUtils.getParametersForTestAdd()));
         steps.assertAddedTestIsPresent(getContext(Context.TEST_ID));
     }
 
     @AfterTest
     public void sendLogs() {
-        steps.addLogs(ADD_LOGS, dataUtils.getParametersForLogsAdd());
-        steps.addScreenshot(ADD_CONTENT, dataUtils.getParametersForScreenshotAdd());
+        steps.addLogs(EndPoints.ADD_LOGS.getValue(), dataUtils.getParametersForLogsAdd());
+        steps.addScreenshot(EndPoints.ADD_CONTENT.getValue(), dataUtils.getParametersForScreenshotAdd());
     }
 }

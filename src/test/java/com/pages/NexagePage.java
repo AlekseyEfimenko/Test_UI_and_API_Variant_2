@@ -10,11 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NexagePage extends Form {
+    private static final By NEXAGE_PAGE_XPATH = xpath("//script[@type = 'text/javascript']/preceding::li[1][.='Nexage']");
     private static final By START_TIME_XPATH = xpath("//table[@class = 'table']//tr/td[4]");
     private static final By TEST_NAME_XPATH = xpath("//table[@class = 'table']//a[contains(@href, 'Info?testId')]");
 
     public NexagePage() {
-        super(xpath("//script[@type = 'text/javascript']/preceding::li[1][.='Nexage']"), "Nexage page");
+        super(NEXAGE_PAGE_XPATH, "Nexage page");
     }
 
     public List<String> getListOfStartTime() {

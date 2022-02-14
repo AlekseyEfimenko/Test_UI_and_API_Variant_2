@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProjectPage extends Form {
+    private static final By PROJECT_PAGE_XPATH = xpath("//div[@class = 'panel-heading' and contains(text(), 'Available projects')]");
     private final static By NEXAGE_XPATH = xpath("//div[@class = 'list-group']/a[. = 'Nexage']");
     private final static By ADD_PROJECT_XPATH = xpath("//button[@data-target = '#addProject']");
     private static final By PROJECTS_CSS = cssSelector(".list-group a");
@@ -19,7 +20,7 @@ public class ProjectPage extends Form {
     private List<ILink> names = new ArrayList<>();
 
     public ProjectPage() {
-        super(xpath("//div[@class = 'panel-heading' and contains(text(), 'Available projects')]"), "Project page");
+        super(PROJECT_PAGE_XPATH, "Project page");
     }
 
     public void navigateToNexagePage() {
