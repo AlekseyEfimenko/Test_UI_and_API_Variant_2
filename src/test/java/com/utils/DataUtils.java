@@ -48,8 +48,7 @@ public class DataUtils {
     public List<Test> getListOfTests() {
         List<Test> tests = new ArrayList<>();
         try {
-            Type collectionType = new TypeToken<List<Test>>() {
-            }.getType();
+            Type collectionType = new TypeToken<List<Test>>() {}.getType();
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
             tests = gson.fromJson(ApiUtils.getInstance().getBody(), collectionType);
